@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app.config import settings
 
-# Создание движка SQLAlchemy
+# Создание движка
 engine = create_engine(settings.DATABASE_URL)
 
 # Создание сессии
