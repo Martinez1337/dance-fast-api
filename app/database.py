@@ -2,13 +2,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-# SQLite URL для локальной разработки
-SQLALCHEMY_DATABASE_URL = "sqlite:///./dance_api.db"
+from app.config import settings
 
 # Создание движка SQLAlchemy
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
+engine = create_engine(settings.DATABASE_URL)
 
 # Создание сессии
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
