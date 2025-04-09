@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, Boolean
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -11,6 +11,7 @@ class Group(BaseModel):
     description = Column(String, nullable=True)
     level_id = Column(UUID(as_uuid=True), ForeignKey("levels.id"), nullable=False)
     max_capacity = Column(Integer, nullable=False)
+    terminated = Column(Boolean, default=False, nullable=True)
 
     # Связи
     level = relationship("Level", back_populates="groups")

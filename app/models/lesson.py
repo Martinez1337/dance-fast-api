@@ -16,7 +16,8 @@ class Lesson(BaseModel):
     group_id = Column(UUID(as_uuid=True), ForeignKey("groups.id"), nullable=False)
     is_confirmed = Column(Boolean, default=False)
     are_neighbour_allowed = Column(Boolean, default=False)
-
+    terminated = Column(Boolean, default=False, nullable=True)
+    
     # Связи
     lesson_type = relationship("LessonType", back_populates="lessons")
     classroom = relationship("Classroom", back_populates="lessons")

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, String, ForeignKey, Boolean
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from app.models.base import BaseModel
@@ -14,6 +14,7 @@ class Student(BaseModel):
     level = Column(String)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     level_id = Column(UUID(as_uuid=True), ForeignKey("levels.id"), nullable=False)
+    terminated = Column(Boolean, default=False, nullable=True)
 
     user = relationship("User", back_populates="student")
     level = relationship("Level", back_populates="students")
