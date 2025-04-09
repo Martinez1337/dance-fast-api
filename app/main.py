@@ -25,7 +25,7 @@ from app.models.association import (
     TeacherLesson, TeacherGroup, StudentGroup, 
     LessonSubscription, SubscriptionLessonType
 )
-from app.routers import users
+from app.routers import users, auth
 import os
 
 print("Запуск приложения...")
@@ -41,7 +41,6 @@ async def lifespan(app: FastAPI):
         # Создаем все таблицы
         # Base.metadata создаёт все таблицы из моделей, которые наследуются от Base
         Base.metadata.create_all(bind=engine)
-        print("Таблицы успешно созданы")
     except Exception as e:
         print(f"Ошибка при инициализации: {e}")
     yield
@@ -65,6 +64,7 @@ app.add_middleware(
 
 # Подключение роутеров
 app.include_router(users.router)
+app.include_router(auth.router)
 
 @app.get("/")
 async def root():
@@ -72,6 +72,7 @@ async def root():
         "message": "Добро пожаловать в API для школы танцев!",
         "docs": "/docs",
         "endpoints": [
-            "/users"
+            "/users",
+            "/auth"
         ]
     } 

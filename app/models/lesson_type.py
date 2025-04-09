@@ -9,6 +9,7 @@ class LessonType(BaseModel):
     name = Column(String, nullable=False)
     description = Column(String, nullable=True)
     terminated = Column(Boolean, default=False, nullable=True)
+    
     # Связи
     lessons = relationship("Lesson", back_populates="lesson_type")
     subscription_templates = relationship("SubscriptionLessonType", back_populates="lesson_type") 
