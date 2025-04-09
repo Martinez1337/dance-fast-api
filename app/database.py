@@ -1,32 +1,32 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import OperationalError
 import os
-import re
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from dotenv import load_dotenv
 
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+# Принудительно устанавливаем правильный URL соединения
+DATABASE_URL = "postgresql://postgres:12345@localhost:5432/dance_api"
+DATABASE_NAME = "dance_api"
 
-# Извлекаем имя базы данных из URL
-pattern = r'postgresql(?:://|://)(?P<user>[^:]+):(?P<password>[^@]+)@(?P<host>[^:]+):(?P<port>\d+)/(?P<database>.+)'
-match = re.match(pattern, DATABASE_URL)
+print(f"Используемый DATABASE_URL: {DATABASE_URL}")
 
-if not match:
-    raise ValueError(f"Некорректный формат DATABASE_URL: {DATABASE_URL}")
+# Устанавливаем параметры подключения напрямую
+user = "postgres"
+password = "12345"
+host = "localhost"
+port = "5432"
+database = "dance_api"
 
-user = match.group('user')
-password = match.group('password')
-host = match.group('host')
-port = match.group('port')
-DATABASE_NAME = match.group('database')
+print(f"Используемые параметры: user={user}, host={host}, port={port}, database={database}")
 
 def init_db():
+    # Подключаемся к postgres для создания базы данных
     try:
-        # Подключаемся к postgres для создания базы данных
         conn = psycopg2.connect(
             dbname='postgres',
             user=user,
@@ -38,7 +38,7 @@ def init_db():
         
         with conn.cursor() as cur:
             # Проверяем существование базы данных
-            cur.execute("SELECT 1 FROM pg_database WHERE datname = %s", (DATABASE_NAME,))
+            cur.execute(f"SELECT 1 FROM pg_database WHERE datname = %s", (DATABASE_NAME,))
             exists = cur.fetchone()
             
             if not exists:
@@ -50,11 +50,17 @@ def init_db():
                 
     except Exception as e:
         print(f"Ошибка при инициализации базы данных: {e}")
-        # В production не включайте password в логи
-        print(f"Параметры подключения: user={user}, host={host}, port={port}, database={DATABASE_NAME}")
     finally:
         if 'conn' in locals() and conn:
             conn.close()
+            
+    # Создаем движок для работы с SQLAlchemy
+    try:
+        test_engine = create_engine(DATABASE_URL)
+        with test_engine.connect() as conn:
+            print("Тестовое подключение к базе данных успешно")
+    except Exception as e:
+        print(f"Ошибка при тестовом подключении: {e}")
 
 # Создаем движок для работы с нашей базой данных
 engine = create_engine(DATABASE_URL)

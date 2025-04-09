@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
 
 from app.database import engine, Base, init_db
 # Явно импортируем все модели
@@ -25,23 +26,33 @@ from app.models.association import (
     LessonSubscription, SubscriptionLessonType
 )
 from app.routers import users
+import os
+
+print("Запуск приложения...")
+print(f"DATABASE_URL в окружении: {os.getenv('DATABASE_URL')}")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("Запуск события startup")
+    try:
+        # Создаем базу данных, если её нет
+        init_db()
+        
+        # Создаем все таблицы
+        # Base.metadata создаёт все таблицы из моделей, которые наследуются от Base
+        Base.metadata.create_all(bind=engine)
+        print("Таблицы успешно созданы")
+    except Exception as e:
+        print(f"Ошибка при инициализации: {e}")
+    yield
+    print("Завершение работы приложения")
 
 app = FastAPI(
     title="Dance Studio API",
     description="API для мобильного приложения школы танцев",
-    version="0.1.0"
+    version="0.1.0",
+    lifespan=lifespan
 )
-
-# Инициализация базы данных при запуске
-@app.on_event("startup")
-async def startup_event():
-    # Создаем базу данных, если её нет
-    init_db()
-    
-    # Создаем все таблицы
-    # Base.metadata создаёт все таблицы из моделей, которые наследуются от Base
-    Base.metadata.create_all(bind=engine)
-    print("Таблицы успешно созданы")
 
 # Настройка CORS
 app.add_middleware(
