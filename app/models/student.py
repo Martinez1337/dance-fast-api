@@ -1,12 +1,11 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
-from app.database import Base
+from app.models.base import BaseModel
 
-class Student(Base):
+class Student(BaseModel):
     __tablename__ = "students"
 
-    id = Column(Integer, primary_key=True, index=True)
     first_name = Column(String)
     middle_name = Column(String, nullable=True)
     last_name = Column(String)
