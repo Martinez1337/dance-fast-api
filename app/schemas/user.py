@@ -1,10 +1,11 @@
 from pydantic import BaseModel, EmailStr, validator
-from typing import Optional
+from typing import Optional, Union
 from datetime import datetime
 import uuid
 
 class UserBase(BaseModel):
     """Базовая схема пользователя."""
+    id: uuid.UUID
     email: EmailStr
     first_name: str
     last_name: str
@@ -12,10 +13,26 @@ class UserBase(BaseModel):
     description: Optional[str] = None
     phone_number: str
 
-class UserCreate(UserBase):
+
+class UserBaseInfo(BaseModel):
+    id: uuid.UUID
+    email: EmailStr
+    first_name: str
+    last_name: str
+    middle_name: Optional[str] = None
+    description: Optional[str] = None
+    phone_number: str
+    role: str
+
+class UserCreate(BaseModel):
     """Схема для создания пользователя."""
+    email: EmailStr
+    first_name: str
+    last_name: str
+    middle_name: Optional[str] = None
+    description: Optional[str] = None
+    phone_number: str
     password: str
-    level_id: uuid.UUID
 
     @validator('password')
     def password_strength(cls, v):
@@ -27,16 +44,4 @@ class UserCreate(UserBase):
 class UserLogin(BaseModel):
     """Схема для входа пользователя."""
     email: EmailStr
-    password: str    
-
-
-class UserResponse(UserBase):
-    """Схема для ответа с данными пользователя."""
-    id: uuid.UUID
-    is_active: bool
-    created_at: datetime
-    role: str
-    level_name: str
-
-    class Config:
-        from_attributes = True 
+    password: str

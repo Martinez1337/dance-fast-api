@@ -25,7 +25,7 @@ from app.models.association import (
     TeacherLesson, TeacherGroup, StudentGroup, 
     LessonSubscription, SubscriptionLessonType
 )
-from app.routers import users, auth
+from app.routers import users, auth, events
 import os
 
 print("Запуск приложения...")
@@ -63,8 +63,9 @@ app.add_middleware(
 )
 
 # Подключение роутеров
-app.include_router(users.router)
 app.include_router(auth.router)
+app.include_router(users.router)
+app.include_router(events.router)
 
 @app.get("/")
 async def root():

@@ -10,7 +10,7 @@ class Event(BaseModel):
     event_type_id = Column(UUID(as_uuid=True), ForeignKey("event_types.id"), nullable=False)
     name = Column(String, nullable=False)
     description = Column(String, nullable=True)
-    start_time = Column(DateTime(timezone=True), nullable=False)
+    start_time = Column(DateTime, nullable=False)
     photo_url = Column(String, nullable=False)
 
     # Связи
