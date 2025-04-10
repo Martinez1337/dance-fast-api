@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
@@ -22,6 +24,7 @@ def create_event_type(
     event_type = models.EventType(
         name=event_type_data.name,
         description=event_type_data.description,
+        created_at=datetime.now(timezone.utc)
     )
 
     db.add(event_type)

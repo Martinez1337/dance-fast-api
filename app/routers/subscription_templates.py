@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
@@ -32,7 +34,8 @@ async def create_subscription_template(
         description=subscription_template_data.description,
         price=subscription_template_data.price,
         duration=subscription_template_data.duration,
-        is_active=subscription_template_data.is_active
+        is_active=subscription_template_data.is_active,
+        created_at=datetime.now(timezone.utc)
     )
 
     db.add(subscription_template)

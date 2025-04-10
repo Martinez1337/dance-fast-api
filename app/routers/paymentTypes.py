@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
@@ -21,6 +23,7 @@ def create_payment_type(
 ):
     payment_type = models.PaymentType(
         name=payment_type_data.name,
+        created_at=datetime.now(timezone.utc)
     )
 
     db.add(payment_type)

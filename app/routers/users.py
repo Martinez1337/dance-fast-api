@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
@@ -36,7 +38,8 @@ async def create_user(
         middle_name=user_data.middle_name,
         last_name=user_data.last_name,
         description=user_data.description,
-        phone_number=user_data.phone_number
+        phone_number=user_data.phone_number,
+        created_at=datetime.now(timezone.utc)
     )
 
     db.add(user)
@@ -58,4 +61,4 @@ async def get_user_by_id(user_id: int, db: Session = Depends(get_db)):
             status_code=status.HTTP_404_NOT_FOUND, 
             detail="Пользователь не найден"
         )
-    return db_user 
+    return db_user

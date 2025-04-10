@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
@@ -22,6 +24,7 @@ def create_classroom(
     classroom = models.Classroom(
         name=classroom_data.name,
         description=classroom_data.description,
+        created_at=datetime.now(timezone.utc)
     )
 
     db.add(classroom)
