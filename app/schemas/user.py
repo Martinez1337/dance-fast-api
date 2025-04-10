@@ -6,7 +6,6 @@ import uuid
 
 class UserBase(BaseModel):
     """Базовая схема пользователя."""
-    id: uuid.UUID
     email: EmailStr
     first_name: str
     last_name: str
@@ -18,7 +17,7 @@ class UserBase(BaseModel):
         from_attributes = True
 
 
-class UserBaseInfo(BaseModel):
+class UserInfo(BaseModel):
     id: uuid.UUID
     email: EmailStr
     first_name: str

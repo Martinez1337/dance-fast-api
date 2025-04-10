@@ -5,7 +5,7 @@ from datetime import timedelta, datetime, timezone
 
 from app.database import get_db
 from app.schemas.token import Token
-from app.schemas.user import UserCreate, UserBaseInfo
+from app.schemas.user import UserCreate, UserInfo
 from app.schemas.student import StudentResponse
 from app.models.user import User
 from app.models.student import Student
@@ -108,7 +108,7 @@ async def read_users_me(current_user: User = Depends(get_current_active_user), d
     
     teacher = db.query(Teacher).filter(Teacher.user_id == current_user.id).first()
     if teacher:
-        return UserBaseInfo(
+        return UserInfo(
             id=current_user.id,
             email=current_user.email,
             first_name=current_user.first_name,
@@ -121,7 +121,7 @@ async def read_users_me(current_user: User = Depends(get_current_active_user), d
     
     admin = db.query(Admin).filter(Admin.user_id == current_user.id).first()
     if admin:
-        return UserBaseInfo(
+        return UserInfo(
             id=current_user.id,
             email=current_user.email,
             first_name=current_user.first_name,
