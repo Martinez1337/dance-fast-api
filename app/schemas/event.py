@@ -2,6 +2,9 @@ from pydantic import BaseModel
 from datetime import datetime
 import uuid
 
+from app.schemas.eventType import EventTypeInfo
+
+
 class EventBase(BaseModel):
     """Базовая схема мероприятия."""
     event_type_id: uuid.UUID
@@ -10,10 +13,10 @@ class EventBase(BaseModel):
     start_time: datetime
     photo_url: str
 
-class EventBaseInfo(BaseModel):
+
+class EventBaseInfo(EventBase):
     id: uuid.UUID
-    event_type_id: uuid.UUID
-    name: str
-    description: str | None = None
-    start_time: datetime
-    photo_url: str
+
+
+class EventBaseInfoWithType(EventBaseInfo):
+    event_type: EventTypeInfo

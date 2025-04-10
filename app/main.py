@@ -22,14 +22,15 @@ from app.models.payment_type import PaymentType
 from app.models.event import Event
 from app.models.event_type import EventType
 from app.models.association import (
-    TeacherLesson, TeacherGroup, StudentGroup, 
+    TeacherLesson, TeacherGroup, StudentGroup,
     LessonSubscription, SubscriptionLessonType
 )
-from app.routers import users, auth, events
+from app.routers import users, auth, events, eventTypes
 import os
 
 print("Запуск приложения...")
 print(f"DATABASE_URL в окружении: {os.getenv('DATABASE_URL')}")
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -37,7 +38,7 @@ async def lifespan(app: FastAPI):
     try:
         # Создаем базу данных, если её нет
         init_db()
-        
+
         # Создаем все таблицы
         # Base.metadata создаёт все таблицы из моделей, которые наследуются от Base
         Base.metadata.create_all(bind=engine)
@@ -45,6 +46,7 @@ async def lifespan(app: FastAPI):
         print(f"Ошибка при инициализации: {e}")
     yield
     print("Завершение работы приложения")
+
 
 app = FastAPI(
     title="Dance Studio API",
@@ -66,6 +68,8 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(events.router)
+app.include_router(eventTypes.router)
+
 
 @app.get("/")
 async def root():
@@ -73,7 +77,9 @@ async def root():
         "message": "Добро пожаловать в API для школы танцев!",
         "docs": "/docs",
         "endpoints": [
-            "/users",
-            "/auth"
+            "/auth",
+            "/users"
+            "/events"
+            "/eventTypes"
         ]
-    } 
+    }

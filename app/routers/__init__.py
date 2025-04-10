@@ -1,1 +1,1 @@
-from app.routers import *;
+from app.routers import *

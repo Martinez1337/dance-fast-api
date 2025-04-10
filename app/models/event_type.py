@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 
 from app.models.base import BaseModel
 
+
 class EventType(BaseModel):
     __tablename__ = "event_types"
 
@@ -11,4 +12,4 @@ class EventType(BaseModel):
     terminated = Column(Boolean, default=False, nullable=True)
 
     # Связи
-    events = relationship("Event", back_populates="event_type") 
+    events = relationship("Event", back_populates="event_type")
