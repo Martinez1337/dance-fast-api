@@ -7,8 +7,6 @@ from datetime import datetime, timezone
 
 import uuid
 
-from app.schemas.event import EventBaseInfoWithType
-
 from app.schemas.eventType import EventTypeInfo
 
 router = APIRouter(
@@ -53,7 +51,7 @@ def get_all_events(skip: int = 0, limit: int = 100, db: Session = Depends(get_db
     return events
 
 
-@router.get("/withType", response_model=List[schemas.EventBaseInfoWithType])
+@router.get("/full-info", response_model=List[schemas.EventFullInfo])
 def get_all_events(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     events = db.query(models.Event).offset(skip).limit(limit).all()
 
@@ -62,7 +60,7 @@ def get_all_events(skip: int = 0, limit: int = 100, db: Session = Depends(get_db
     for event in events:
         event_type = db.query(models.EventType).filter(models.EventType.id == event.event_type_id).first()
 
-        event_with_type = EventBaseInfoWithType(
+        event_with_type = schemas.EventFullInfo(
             id=event.id,
             name=event.name,
             description=event.description,
@@ -93,7 +91,7 @@ def get_event_by_id(event_id: uuid.UUID, db: Session = Depends(get_db)):
     return db_event
 
 
-@router.get("/withType/{event_id}", response_model=schemas.EventBaseInfoWithType)
+@router.get("/full-info/{event_id}", response_model=schemas.EventFullInfo)
 def get_event_with_type_by_id(event_id: uuid.UUID, db: Session = Depends(get_db)):
     event = db.query(models.Event).filter(models.Event.id == event_id).first()
     if event is None:
@@ -109,7 +107,7 @@ def get_event_with_type_by_id(event_id: uuid.UUID, db: Session = Depends(get_db)
             detail="Тип мероприятия не найден"
         )
 
-    return EventBaseInfoWithType(
+    return schemas.EventFullInfo(
         id=event.id,
         name=event.name,
         description=event.description,

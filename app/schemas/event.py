@@ -24,7 +24,7 @@ class EventBaseInfo(EventBase):
         from_attributes = True
 
 
-class EventBaseInfoWithType(EventBaseInfo):
+class EventFullInfo(EventBaseInfo):
     event_type: EventTypeInfo
 
     class Config:
