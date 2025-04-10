@@ -4,28 +4,7 @@ from contextlib import asynccontextmanager
 
 from app.database import engine, Base, init_db
 # Явно импортируем все модели
-from app.models.base import BaseModel
-from app.models.user import User
-from app.models.level import Level
-from app.models.student import Student
-from app.models.teacher import Teacher
-from app.models.admin import Admin
-from app.models.group import Group
-from app.models.lesson import Lesson
-from app.models.classroom import Classroom
-from app.models.lesson_type import LessonType
-from app.models.slot import Slot
-from app.models.subscription import Subscription
-from app.models.subscription_template import SubscriptionTemplate
-from app.models.payment import Payment
-from app.models.payment_type import PaymentType
-from app.models.event import Event
-from app.models.event_type import EventType
-from app.models.association import (
-    TeacherLesson, TeacherGroup, StudentGroup,
-    LessonSubscription, SubscriptionLessonType
-)
-from app.routers import users, auth, events, eventTypes, classrooms
+from app.routers import users, auth, events, eventTypes, classrooms, subscription_templates
 import os
 
 print("Запуск приложения...")
@@ -70,7 +49,7 @@ app.include_router(users.router)
 app.include_router(events.router)
 app.include_router(eventTypes.router)
 app.include_router(classrooms.router)
-
+app.include_router(subscription_templates.router)
 
 @app.get("/")
 async def root():
