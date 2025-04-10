@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
+from app.schemas.subscription_template import SubscriptionTemplateInfo
 import uuid
 
 class SubscriptionBase(BaseModel):
@@ -14,6 +15,12 @@ class SubscriptionBase(BaseModel):
 
 class SubscriptionInfo(SubscriptionBase):
     id: uuid.UUID
+
+    class Config:
+        from_attributes = True
+
+class SubscriptionFullInfo(SubscriptionInfo):
+    subscription_template: SubscriptionTemplateInfo
 
     class Config:
         from_attributes = True

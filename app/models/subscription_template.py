@@ -10,7 +10,7 @@ class SubscriptionTemplate(BaseModel):
     name = Column(String, nullable=False)
     description = Column(String, nullable=True)
     lesson_count = Column(Integer, nullable=False)
-    expiration_date = Column(DateTime, nullable=True)
+    expiration_date = Column(DateTime(timezone=True), nullable=True)
     expiration_day_count = Column(Integer, nullable=True)
     price = Column(Numeric(8, 2), nullable=False)
     active = Column(Boolean, default=True)

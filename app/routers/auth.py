@@ -5,8 +5,8 @@ from datetime import timedelta, datetime, timezone
 
 from app.database import get_db
 from app.schemas.token import Token
-from app.schemas.user import UserCreate, UserInfo
-from app.schemas.student import StudentResponse
+from app.schemas.user import UserInfo
+from app.schemas.student import StudentResponse, StudentCreate
 from app.models.user import User
 from app.models.student import Student
 from app.models.level import Level
@@ -21,7 +21,7 @@ router = APIRouter(
 )
 
 @router.post("/register", response_model=StudentResponse, status_code=status.HTTP_201_CREATED)
-async def register(user_data: UserCreate, db: Session = Depends(get_db)):
+async def register(user_data: StudentCreate, db: Session = Depends(get_db)):
     """Регистрация нового студента."""
     # Проверяем, существует ли пользователь с таким email
     existing_user = db.query(User).filter(User.email == user_data.email).first()
