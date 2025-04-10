@@ -21,14 +21,14 @@ async def create_student(
         db: Session = Depends(get_db)
 ):
     user = db.query(models.User).filter(models.User.id == student_data.user_id).first()
-    if user:
+    if not user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Пользователя с идентификатором {student_data.user_id} не существует",
         )
 
     level = db.query(models.Level).filter(models.Level.id == student_data.level_id).first()
-    if level:
+    if not level:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Уровня подготовки с идентификатором {student_data.level_id} не существует",
