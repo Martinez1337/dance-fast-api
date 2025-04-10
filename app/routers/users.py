@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -54,7 +55,7 @@ async def get_all_users(skip: int = 0, limit: int = 100, db: Session = Depends(g
     return users
 
 @router.get("/{user_id}", response_model=schemas.UserBase)
-async def get_user_by_id(user_id: int, db: Session = Depends(get_db)):
+async def get_user_by_id(user_id: uuid.UUID, db: Session = Depends(get_db)):
     db_user = db.query(models.User).filter(models.User.id == user_id).first()
     if db_user is None:
         raise HTTPException(
