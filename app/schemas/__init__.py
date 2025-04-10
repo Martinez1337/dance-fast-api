@@ -8,3 +8,4 @@ from app.schemas.subscription_template import *
 from app.schemas.paymentType import *
 from app.schemas.payment import *
 from app.schemas.slot import *
+from app.schemas.student import *
