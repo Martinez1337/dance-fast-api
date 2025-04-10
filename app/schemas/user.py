@@ -3,6 +3,7 @@ from typing import Optional, Union
 from datetime import datetime
 import uuid
 
+
 class UserBase(BaseModel):
     """Базовая схема пользователя."""
     id: uuid.UUID
@@ -12,6 +13,9 @@ class UserBase(BaseModel):
     middle_name: Optional[str] = None
     description: Optional[str] = None
     phone_number: str
+
+    class Config:
+        from_attributes = True
 
 
 class UserBaseInfo(BaseModel):
@@ -23,6 +27,10 @@ class UserBaseInfo(BaseModel):
     description: Optional[str] = None
     phone_number: str
     role: str
+
+    class Config:
+        from_attributes = True
+
 
 class UserCreate(BaseModel):
     """Схема для создания пользователя."""
@@ -41,7 +49,14 @@ class UserCreate(BaseModel):
             raise ValueError('Пароль должен содержать минимум 8 символов')
         return v
 
+    class Config:
+        from_attributes = True
+
+
 class UserLogin(BaseModel):
     """Схема для входа пользователя."""
     email: EmailStr
     password: str
+
+    class Config:
+        from_attributes = True

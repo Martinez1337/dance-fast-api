@@ -25,7 +25,7 @@ from app.models.association import (
     TeacherLesson, TeacherGroup, StudentGroup,
     LessonSubscription, SubscriptionLessonType
 )
-from app.routers import users, auth, events, eventTypes
+from app.routers import users, auth, events, eventTypes, classrooms
 import os
 
 print("Запуск приложения...")
@@ -69,6 +69,7 @@ app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(events.router)
 app.include_router(eventTypes.router)
+app.include_router(classrooms.router)
 
 
 @app.get("/")

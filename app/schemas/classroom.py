@@ -2,8 +2,8 @@ from pydantic import BaseModel
 import uuid
 
 
-class EventTypeBase(BaseModel):
-    """Базовая схема типа мероприятия."""
+class ClassroomBase(BaseModel):
+    """Базовая схема зала."""
     name: str
     description: str | None = None
 
@@ -11,7 +11,7 @@ class EventTypeBase(BaseModel):
         from_attributes = True
 
 
-class EventTypeInfo(EventTypeBase):
+class ClassroomBaseInfo(ClassroomBase):
     id: uuid.UUID
     terminated: bool
 

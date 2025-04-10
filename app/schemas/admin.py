@@ -3,6 +3,10 @@ from typing import Optional
 from datetime import datetime
 import uuid
 
+
 class AdminBase(BaseModel):
     """Базовая схема администратора."""
     user_id: uuid.UUID
+
+    class Config:
+        from_attributes = True

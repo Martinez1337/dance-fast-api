@@ -13,10 +13,19 @@ class EventBase(BaseModel):
     start_time: datetime
     photo_url: str
 
+    class Config:
+        from_attributes = True
+
 
 class EventBaseInfo(EventBase):
     id: uuid.UUID
 
+    class Config:
+        from_attributes = True
+
 
 class EventBaseInfoWithType(EventBaseInfo):
     event_type: EventTypeInfo
+
+    class Config:
+        from_attributes = True
