@@ -9,7 +9,8 @@ class Slot(BaseModel):
 
     teacher_id = Column(UUID(as_uuid=True), ForeignKey("teachers.id"), nullable=False)
     day_of_week = Column(Integer, nullable=False)
-    time = Column(Time, nullable=False)
+    start_time = Column(Time, nullable=False)
+    end_time = Column(Time, nullable=False)
 
     # Связи
     teacher = relationship("Teacher", back_populates="slots") 

@@ -6,6 +6,7 @@ import uuid
 
 class UserBase(BaseModel):
     """Базовая схема пользователя."""
+    id: uuid.UUID
     email: EmailStr
     first_name: str
     last_name: str
