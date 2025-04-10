@@ -12,4 +12,4 @@ class Payment(BaseModel):
 
     # Связи
     payment_type = relationship("PaymentType", back_populates="payments")
-    subscription = relationship("Subscription", back_populates="payment") 
+    subscription = relationship("Subscription", back_populates="payment")

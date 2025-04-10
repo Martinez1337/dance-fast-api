@@ -41,7 +41,7 @@ def get_all_event_types(skip: int = 0, limit: int = 100, db: Session = Depends(g
 
 
 @router.get("/{event_type_id}", response_model=schemas.EventTypeInfo)
-def get_event_by_id(event_type_id: uuid.UUID, db: Session = Depends(get_db)):
+def get_event_type_by_id(event_type_id: uuid.UUID, db: Session = Depends(get_db)):
     event_type = db.query(models.EventType).filter(models.EventType.id == event_type_id).first()
     if event_type is None:
         raise HTTPException(
