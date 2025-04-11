@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 from app.database import engine, Base, init_db
 # Явно импортируем все модели
 from app.routers import users, auth, events, eventTypes, classrooms, subscription_templates, paymentTypes, payments, \
-    subscription, slots, students, levels, teachers
+    subscription, slots, students, levels, teachers, lessonTypes
 import os
 
 print("Запуск приложения...")
@@ -52,6 +52,7 @@ app.include_router(teachers.router)
 app.include_router(levels.router)
 app.include_router(events.router)
 app.include_router(eventTypes.router)
+app.include_router(lessonTypes.router)
 app.include_router(classrooms.router)
 app.include_router(subscription.router)
 app.include_router(subscription_templates.router)
