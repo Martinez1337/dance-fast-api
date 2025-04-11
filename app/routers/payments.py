@@ -54,14 +54,7 @@ def get_all_payments(skip: int = 0, limit: int = 100, db: Session = Depends(get_
 @router.get("/withType", response_model=List[schemas.PaymentBaseInfoWithType])
 def get_all_payments_with_types(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     payments = db.query(models.Payment).offset(skip).limit(limit).all()
-
-    payments_with_types = []
-
-    for payment in payments:
-        payment_with_type = get_payment_with_type_by_id(payment.id)
-        payments_with_types.append(payment_with_type)
-
-    return payments_with_types
+    return payments
 
 
 @router.get("/{payment_id}", response_model=schemas.PaymentBaseInfo)
@@ -91,12 +84,4 @@ def get_payment_with_type_by_id(payment_id: uuid.UUID, db: Session = Depends(get
             detail="Тип платежа не найден"
         )
 
-    return PaymentBaseInfoWithType(
-        id=payment.id,
-        payment_type_id=payment.payment_type_id,
-        details=payment.details,
-        payment_type=PaymentTypeInfo(
-            id=payment_type.id,
-            name=payment_type.name
-        )
-    )
+    return payment

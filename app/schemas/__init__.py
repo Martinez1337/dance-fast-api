@@ -10,3 +10,4 @@ from app.schemas.payment import *
 from app.schemas.slot import *
 from app.schemas.student import *
 from app.schemas.level import *
+from app.schemas.teacher import *

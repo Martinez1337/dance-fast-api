@@ -54,14 +54,7 @@ def get_all_events(skip: int = 0, limit: int = 100, db: Session = Depends(get_db
 @router.get("/full-info", response_model=List[schemas.EventFullInfo])
 def get_all_events(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     events = db.query(models.Event).offset(skip).limit(limit).all()
-
-    events_with_types = []
-
-    for event in events:
-        event_with_type = get_event_with_type_by_id(event.id)
-        events_with_types.append(event_with_type)
-
-    return events_with_types
+    return events
 
 
 @router.get("/{event_id}", response_model=schemas.EventBaseInfo)
@@ -91,17 +84,4 @@ def get_event_with_type_by_id(event_id: uuid.UUID, db: Session = Depends(get_db)
             detail="Тип мероприятия не найден"
         )
 
-    return schemas.EventFullInfo(
-        id=event.id,
-        name=event.name,
-        description=event.description,
-        start_time=event.start_time,
-        photo_url=event.photo_url,
-        event_type_id=event.event_type_id,
-        event_type=EventTypeInfo(
-            id=event_type.id,
-            name=event_type.name,
-            description=event_type.description,
-            terminated=event_type.terminated
-        )
-    )
+    return event
