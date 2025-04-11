@@ -16,6 +16,7 @@ router = APIRouter(
     responses={404: {"description": "Пользователь не найден"}}
 )
 
+
 @router.post("/", response_model=schemas.UserBase, status_code=status.HTTP_201_CREATED)
 async def create_user(
     user_data: schemas.UserCreate,
@@ -49,10 +50,12 @@ async def create_user(
 
     return user
 
+
 @router.get("/", response_model=List[schemas.UserBase])
 async def get_all_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     users = db.query(models.User).offset(skip).limit(limit).all()
     return users
+
 
 @router.get("/{user_id}", response_model=schemas.UserBase)
 async def get_user_by_id(user_id: uuid.UUID, db: Session = Depends(get_db)):

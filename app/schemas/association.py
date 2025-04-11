@@ -1,22 +1,33 @@
-import uuid
 from pydantic import BaseModel
-from app.schemas.level import LevelBaseInfo
-from app.schemas.student import StudentFullInfo
-from app.schemas.teacher import TeacherFullInfo
 from datetime import datetime
-from typing import Optional, List
 
 
-class StudentGroupBase(BaseModel):
-    student: StudentFullInfo
+class GroupStudentBase(BaseModel):
+    student: "StudentGroupInfo"
     join_date: datetime
 
     class Config:
         from_attributes = True
 
 
-class TeacherGroupBase(BaseModel):
-    teacher: TeacherFullInfo
+class GroupTeacherBase(BaseModel):
+    teacher: "TeacherGroupInfo"
 
     class Config:
         from_attributes = True
+
+
+class MemberGroupBase(BaseModel):
+    group: "GroupBaseInfo"
+
+    class Config:
+        from_attributes = True
+
+
+from app.schemas.group import GroupBaseInfo
+from app.schemas.student import StudentGroupInfo
+from app.schemas.teacher import TeacherGroupInfo
+
+GroupStudentBase.model_rebuild()
+GroupTeacherBase.model_rebuild()
+MemberGroupBase.model_rebuild()
