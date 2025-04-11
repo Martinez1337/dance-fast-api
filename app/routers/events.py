@@ -58,23 +58,7 @@ def get_all_events(skip: int = 0, limit: int = 100, db: Session = Depends(get_db
     events_with_types = []
 
     for event in events:
-        event_type = db.query(models.EventType).filter(models.EventType.id == event.event_type_id).first()
-
-        event_with_type = schemas.EventFullInfo(
-            id=event.id,
-            name=event.name,
-            description=event.description,
-            start_time=event.start_time,
-            photo_url=event.photo_url,
-            event_type_id=event.event_type_id,
-            event_type=EventTypeInfo(
-                id=event_type.id,
-                name=event_type.name,
-                description=event_type.description,
-                terminated=event_type.terminated
-            )
-        )
-
+        event_with_type = get_event_with_type_by_id(event.id)
         events_with_types.append(event_with_type)
 
     return events_with_types

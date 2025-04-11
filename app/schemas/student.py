@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from app.schemas.user import UserBase, UserCreate
+from app.schemas.level import LevelBaseInfo
 import uuid
 
 
@@ -19,11 +20,21 @@ class StudentBaseInfo(StudentBase):
     class Config:
         from_attributes = True
 
+
+class StudentFullInfo(StudentBaseInfo):
+    user: UserBase
+    level: LevelBaseInfo
+
+    class Config:
+        from_attributes = True
+
+
 class StudentCreate(UserCreate):
     level_id: uuid.UUID
 
     class Config:
         from_attributes = True
+
 
 class StudentResponse(UserBase):
     level_name: str

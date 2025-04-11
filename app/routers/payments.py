@@ -58,18 +58,7 @@ def get_all_payments_with_types(skip: int = 0, limit: int = 100, db: Session = D
     payments_with_types = []
 
     for payment in payments:
-        payment_type = db.query(models.PaymentType).filter(models.PaymentType.id == payment.payment_type_id).first()
-
-        payment_with_type = PaymentBaseInfoWithType(
-            id=payment.id,
-            payment_type_id=payment.payment_type_id,
-            details=payment.details,
-            payment_type=PaymentTypeInfo(
-                id=payment_type.id,
-                name=payment_type.name,
-            )
-        )
-
+        payment_with_type = get_payment_with_type_by_id(payment.id)
         payments_with_types.append(payment_with_type)
 
     return payments_with_types
