@@ -49,3 +49,21 @@ async def get_level_by_id(level_id: uuid.UUID, db: Session = Depends(get_db)):
             detail="Уровень не найден"
         )
     return level
+
+
+@router.patch("/{level_id}", response_model=schemas.LevelInfo, status_code=status.HTTP_200_OK)
+async def patch_level(level_id: uuid.UUID, level_data: schemas.LevelUpdate, db: Session = Depends(get_db)):
+    level = db.query(models.Level).filter(models.Level.id == level_id).first()
+    if not level:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Уровень не найден"
+        )
+
+    for field, value in level_data.model_dump(exclude_unset=True).items():
+        setattr(level, field, value)
+
+    db.commit()
+    db.refresh(level)
+
+    return level

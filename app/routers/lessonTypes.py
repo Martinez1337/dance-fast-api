@@ -49,3 +49,21 @@ async def get_lesson_type_by_id(lesson_type_id: uuid.UUID, db: Session = Depends
             detail="Тип занятия не найден"
         )
     return lesson_type
+
+
+@router.patch("/{lesson_type_id}", response_model=schemas.LessonTypeInfo, status_code=status.HTTP_200_OK)
+async def patch_lesson_type(lesson_type_id: uuid.UUID, lesson_type_data: schemas.LessonTypeUpdate, db: Session = Depends(get_db)):
+    lesson_type = db.query(models.LessonType).filter(models.LessonType.id == lesson_type_id).first()
+    if not lesson_type:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Тип занятия не найден"
+        )
+
+    for field, value in lesson_type_data.model_dump(exclude_unset=True).items():
+        setattr(lesson_type, field, value)
+
+    db.commit()
+    db.refresh(lesson_type)
+
+    return lesson_type
