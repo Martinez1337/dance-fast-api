@@ -33,7 +33,7 @@ async def create_subscription(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Шаблон подписки не активен"
         )
-    if subscription_template.expiration_date < datetime.now(timezone.utc):
+    if subscription_template.expiration_date <= datetime.now(timezone.utc):
         print(subscription_template.expiration_date)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
