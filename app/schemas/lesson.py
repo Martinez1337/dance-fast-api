@@ -22,7 +22,7 @@ class LessonBase(BaseModel):
         from_attributes = True
 
 
-class LessonBaseInfo(LessonBase):
+class LessonInfo(LessonBase):
     id: uuid.UUID
     is_confirmed: bool
     are_neighbours_allowed: bool
@@ -32,7 +32,7 @@ class LessonBaseInfo(LessonBase):
         from_attributes = True
 
 
-class LessonFullInfo(LessonBaseInfo):
+class LessonFullInfo(LessonInfo):
     lesson_type: LessonTypeInfo
     classroom: ClassroomInfo
     group: GroupFullInfo

@@ -16,7 +16,7 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=schemas.StudentBaseInfo, status_code=status.HTTP_201_CREATED)
+@router.post("/", response_model=schemas.StudentInfo, status_code=status.HTTP_201_CREATED)
 async def create_student(
         student_data: schemas.StudentBase,
         db: Session = Depends(get_db)
@@ -48,7 +48,7 @@ async def create_student(
     return student
 
 
-@router.get("/", response_model=List[schemas.StudentBaseInfo])
+@router.get("/", response_model=List[schemas.StudentInfo])
 async def get_all_students(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     students = db.query(models.Student).offset(skip).limit(limit).all()
     return students
@@ -60,7 +60,7 @@ async def get_all_students_full_info(skip: int = 0, limit: int = 100, db: Sessio
     return students
 
 
-@router.get("/{student_id}", response_model=schemas.StudentBaseInfo)
+@router.get("/{student_id}", response_model=schemas.StudentInfo)
 async def get_student_by_id(student_id: uuid.UUID, db: Session = Depends(get_db)):
     student = db.query(models.Student).filter(models.Student.id == student_id).first()
     if not student:

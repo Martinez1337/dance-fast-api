@@ -12,14 +12,14 @@ class PaymentBase(BaseModel):
         from_attributes = True
 
 
-class PaymentBaseInfo(PaymentBase):
+class PaymentInfo(PaymentBase):
     id: uuid.UUID
 
     class Config:
         from_attributes = True
 
 
-class PaymentBaseInfoWithType(PaymentBaseInfo):
+class PaymentInfoWithType(PaymentInfo):
     payment_type: PaymentTypeInfo
 
     class Config:

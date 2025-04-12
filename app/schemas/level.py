@@ -12,7 +12,7 @@ class LevelBase(BaseModel):
         from_attributes = True
 
 
-class LevelBaseInfo(LevelBase):
+class LevelInfo(LevelBase):
     id: uuid.UUID
     terminated: bool
 

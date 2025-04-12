@@ -17,7 +17,7 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=schemas.EventBaseInfo, status_code=status.HTTP_201_CREATED)
+@router.post("/", response_model=schemas.EventInfo, status_code=status.HTTP_201_CREATED)
 async def create_event(
         event_data: schemas.EventBase,
         db: Session = Depends(get_db)
@@ -45,7 +45,7 @@ async def create_event(
     return event
 
 
-@router.get("/", response_model=List[schemas.EventBaseInfo])
+@router.get("/", response_model=List[schemas.EventInfo])
 async def get_all_events(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     events = db.query(models.Event).offset(skip).limit(limit).all()
     return events
@@ -57,7 +57,7 @@ async def get_all_events(skip: int = 0, limit: int = 100, db: Session = Depends(
     return events
 
 
-@router.get("/{event_id}", response_model=schemas.EventBaseInfo)
+@router.get("/{event_id}", response_model=schemas.EventInfo)
 async def get_event_by_id(event_id: uuid.UUID, db: Session = Depends(get_db)):
     db_event = db.query(models.Event).filter(models.Event.id == event_id).first()
     if db_event is None:

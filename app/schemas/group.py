@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from app.schemas.level import LevelBaseInfo
+from app.schemas.level import LevelInfo
 from app.schemas.association import GroupTeacherBase, GroupStudentBase
 import uuid
 from typing import Optional, List
@@ -26,7 +26,7 @@ class GroupBaseInfo(GroupBase):
 
 
 class GroupFullInfo(GroupBaseInfo):
-    level: LevelBaseInfo
+    level: LevelInfo
     students: List[GroupStudentBase]
     teachers: List[GroupTeacherBase]
 

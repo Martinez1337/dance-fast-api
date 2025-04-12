@@ -16,7 +16,7 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=schemas.TeacherBaseInfo, status_code=status.HTTP_201_CREATED)
+@router.post("/", response_model=schemas.TeacherInfo, status_code=status.HTTP_201_CREATED)
 async def create_teacher(
         teacher_data: schemas.TeacherBase,
         db: Session = Depends(get_db)
@@ -40,7 +40,7 @@ async def create_teacher(
     return teacher
 
 
-@router.get("/", response_model=List[schemas.TeacherBaseInfo])
+@router.get("/", response_model=List[schemas.TeacherInfo])
 async def get_all_teachers(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     teachers = db.query(models.Teacher).offset(skip).limit(limit).all()
     return teachers
@@ -52,7 +52,7 @@ async def get_all_teachers_full_info(skip: int = 0, limit: int = 100, db: Sessio
     return teachers
 
 
-@router.get("/{teacher_id}", response_model=schemas.TeacherBaseInfo)
+@router.get("/{teacher_id}", response_model=schemas.TeacherInfo)
 async def get_teacher_by_id(teacher_id: uuid.UUID, db: Session = Depends(get_db)):
     teacher = db.query(models.Teacher).filter(models.Teacher.id == teacher_id).first()
     if not teacher:

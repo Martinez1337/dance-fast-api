@@ -2,6 +2,7 @@ from pydantic import BaseModel
 import uuid
 from datetime import time
 
+
 class SlotBase(BaseModel):
     """Базовая схема слота."""
     teacher_id: uuid.UUID
@@ -13,7 +14,7 @@ class SlotBase(BaseModel):
         from_attributes = True
 
 
-class SlotBaseInfo(SlotBase):
+class SlotInfo(SlotBase):
     id: uuid.UUID
 
     class Config:

@@ -1,7 +1,7 @@
 import uuid
 from pydantic import BaseModel
 from app.schemas.user import UserBase, UserCreate
-from app.schemas.level import LevelBaseInfo
+from app.schemas.level import LevelInfo
 from typing import List
 
 
@@ -14,7 +14,7 @@ class StudentBase(BaseModel):
         from_attributes = True
 
 
-class StudentBaseInfo(StudentBase):
+class StudentInfo(StudentBase):
     id: uuid.UUID
     terminated: bool
 
@@ -22,17 +22,17 @@ class StudentBaseInfo(StudentBase):
         from_attributes = True
 
 
-class StudentGroupInfo(StudentBaseInfo):
+class StudentGroupInfo(StudentInfo):
     user: UserBase
-    level: LevelBaseInfo
+    level: LevelInfo
 
     class Config:
         from_attributes = True
 
 
-class StudentFullInfo(StudentBaseInfo):
+class StudentFullInfo(StudentInfo):
     user: UserBase
-    level: LevelBaseInfo
+    level: LevelInfo
     groups: "List[MemberGroupBase]"
 
     class Config:

@@ -13,7 +13,7 @@ class TeacherBase(BaseModel):
         from_attributes = True
 
 
-class TeacherBaseInfo(TeacherBase):
+class TeacherInfo(TeacherBase):
     id: uuid.UUID
     terminated: bool
 
@@ -21,14 +21,14 @@ class TeacherBaseInfo(TeacherBase):
         from_attributes = True
 
 
-class TeacherGroupInfo(TeacherBaseInfo):
+class TeacherGroupInfo(TeacherInfo):
     user: UserBase
 
     class Config:
         from_attributes = True
 
 
-class TeacherFullInfo(TeacherBaseInfo):
+class TeacherFullInfo(TeacherInfo):
     user: UserBase
     groups: List[MemberGroupBase]
 

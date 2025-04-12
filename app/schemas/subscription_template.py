@@ -4,6 +4,7 @@ from datetime import datetime
 import uuid
 import decimal
 
+
 class SubscriptionTemplateBase(BaseModel):
     """Базовая схема шаблона подписки."""
     name: str
@@ -16,6 +17,7 @@ class SubscriptionTemplateBase(BaseModel):
 
     class Config:
         from_attributes = True
+
 
 class SubscriptionTemplateInfo(SubscriptionTemplateBase):
     id: uuid.UUID

@@ -16,7 +16,7 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=schemas.LevelBaseInfo, status_code=status.HTTP_201_CREATED)
+@router.post("/", response_model=schemas.LevelInfo, status_code=status.HTTP_201_CREATED)
 async def create_level(
         level_data: schemas.LevelBase,
         db: Session = Depends(get_db)
@@ -34,13 +34,13 @@ async def create_level(
     return level
 
 
-@router.get("/", response_model=List[schemas.LevelBaseInfo])
+@router.get("/", response_model=List[schemas.LevelInfo])
 async def get_all_levels(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     levels = db.query(models.Level).offset(skip).limit(limit).all()
     return levels
 
 
-@router.get("/{level_id}", response_model=schemas.LevelBaseInfo)
+@router.get("/{level_id}", response_model=schemas.LevelInfo)
 async def get_level_by_id(level_id: uuid.UUID, db: Session = Depends(get_db)):
     level = db.query(models.Level).filter(models.Level.id == level_id).first()
     if level is None:

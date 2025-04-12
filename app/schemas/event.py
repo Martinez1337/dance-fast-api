@@ -17,7 +17,7 @@ class EventBase(BaseModel):
         from_attributes = True
 
 
-class EventBaseInfo(EventBase):
+class EventInfo(EventBase):
     id: uuid.UUID
     terminated: bool
 
@@ -25,7 +25,7 @@ class EventBaseInfo(EventBase):
         from_attributes = True
 
 
-class EventFullInfo(EventBaseInfo):
+class EventFullInfo(EventInfo):
     event_type: EventTypeInfo
 
     class Config:
