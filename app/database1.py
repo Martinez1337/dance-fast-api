@@ -10,15 +10,15 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Устанавливаем параметры подключения напрямую
-user = "postgres"
-password = "XzSUDIQJlfIoVMBlqMhxfrXwxAMxucKI"
-host = "postgres.railway.internal"
-port = "5432"
-database = "dance_api"
+user = os.getenv("PGUSER")
+password = os.getenv("PGPASSWORD")
+host = os.getenv("PGHOST")
+port = os.getenv("PGUSER")
+database = os.getenv("PGUSER")
 
 # Принудительно устанавливаем правильный URL соединения
-DATABASE_URL = os.getenv("${{ Postgres.DATABASE_URL }}")
-DATABASE_NAME = "dance_api"
+DATABASE_URL = f"postgresql://{user}:{password}@{host}:5432/{database}"
+DATABASE_NAME = "dance-api"
 
 print(f"Используемый DATABASE_URL: {DATABASE_URL}")
 

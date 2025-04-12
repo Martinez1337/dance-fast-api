@@ -20,7 +20,7 @@ user = "postgres"
 password = "12345"
 host = "localhost"
 port = "5432"
-database = "dance_api"
+database = "dance-api"
 
 print(f"Используемые параметры: user={user}, host={host}, port={port}, database={database}")
 
