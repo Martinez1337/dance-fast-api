@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
-from app.database1 import engine, Base, init_db
+from app.database1 import engine, Base
 # Явно импортируем все модели
 from app.routers import users, auth, events, eventTypes, classrooms, subscription_templates, paymentTypes, payments, \
     subscription, slots, students, levels, teachers, lessonTypes, groups, admins, lessons
@@ -17,7 +17,7 @@ async def lifespan(app: FastAPI):
     print("Запуск события startup")
     try:
         # Создаем базу данных, если её нет
-        init_db()
+        # init_db()
 
         # Создаем все таблицы
         # Base.metadata создаёт все таблицы из моделей, которые наследуются от Base
