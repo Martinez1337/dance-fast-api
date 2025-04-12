@@ -14,7 +14,7 @@ user = os.getenv("PGUSER")
 password = os.getenv("PGPASSWORD")
 host = os.getenv("PGHOST")
 port = os.getenv("PGPORT")
-database = os.getenv("PGUSER")
+database = os.getenv("DATABASE_NAME")
 
 # Принудительно устанавливаем правильный URL соединения
 DATABASE_URL = f"postgresql://{user}:{password}@{host}:5432/{database}"
