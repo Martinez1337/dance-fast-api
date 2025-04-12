@@ -14,3 +14,4 @@ from app.schemas.teacher import *
 from app.schemas.lesson_type import *
 from app.schemas.group import *
 from app.schemas.association import *
+from app.schemas.admin import *
