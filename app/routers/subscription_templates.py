@@ -15,6 +15,7 @@ router = APIRouter(
     responses={404: {"description": "Шаблон подписки не найден"}}
 )
 
+
 @router.post("/", response_model=schemas.SubscriptionTemplateInfo, status_code=status.HTTP_201_CREATED)
 async def create_subscription_template(
     subscription_template_data: schemas.SubscriptionTemplateBase,

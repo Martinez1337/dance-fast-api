@@ -46,10 +46,10 @@ app.add_middleware(
 
 # Подключение роутеров
 app.include_router(auth.router)
+app.include_router(admins.router)
 app.include_router(users.router)
 app.include_router(students.router)
 app.include_router(teachers.router)
-app.include_router(admins.router)
 app.include_router(groups.router)
 app.include_router(levels.router)
 app.include_router(events.router)
