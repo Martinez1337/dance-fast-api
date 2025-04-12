@@ -17,7 +17,7 @@ port = "5432"
 database = "dance_api"
 
 # Принудительно устанавливаем правильный URL соединения
-DATABASE_URL = f"postgresql://{user}:{password}@{host}:5432/{database}"
+DATABASE_URL = os.getenv("${{ Postgres.DATABASE_URL }}")
 DATABASE_NAME = "dance_api"
 
 print(f"Используемый DATABASE_URL: {DATABASE_URL}")
