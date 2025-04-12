@@ -18,7 +18,7 @@ database = os.getenv("DATABASE_NAME")
 
 # Принудительно устанавливаем правильный URL соединения
 DATABASE_URL = f"postgresql://{user}:{password}@{host}:5432/{database}"
-DATABASE_NAME = "dance-api"
+DATABASE_NAME = "railway"
 
 print(f"Используемый DATABASE_URL: {DATABASE_URL}")
 
@@ -28,7 +28,7 @@ def init_db():
     # Подключаемся к postgres для создания базы данных
     try:
         conn = psycopg2.connect(
-            dbname='dance-api',
+            dbname='railway',
             user=user,
             password=password,
             host=host,
