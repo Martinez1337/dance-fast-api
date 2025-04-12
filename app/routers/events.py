@@ -20,11 +20,17 @@ async def create_event(
         event_data: schemas.EventBase,
         db: Session = Depends(get_db)
 ):
-    event_type_id = db.query(models.EventType).filter(models.EventType.id == event_data.event_type_id).first()
-    if not event_type_id:
+    event_type = db.query(models.EventType).filter(models.EventType.id == event_data.event_type_id).first()
+    if not event_type:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Тип мероприятия с идентификатором {event_data.event_type_id} не найден",
+        )
+
+    if datetime.now(timezone.utc) >= event_data.start_time:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Указано невалидное время начала мероприятия"
         )
 
     event = models.Event(
@@ -99,7 +105,7 @@ async def patch_event(event_id: uuid.UUID, event_data: schemas.EventUpdate, db: 
         if not event_type:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail="Тип мероприятия не найдено"
+                detail="Тип мероприятия не найден"
             )
 
     if event_data.start_time and event_data.start_time >= datetime.now(timezone.utc):
