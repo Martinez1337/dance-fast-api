@@ -4,6 +4,7 @@ from sqlalchemy.orm import relationship
 
 from app.models.base import Base
 
+
 class TeacherLesson(Base):
     __tablename__ = "teacher_lessons"
 
@@ -14,6 +15,7 @@ class TeacherLesson(Base):
     teacher = relationship("Teacher", back_populates="lessons")
     lesson = relationship("Lesson", back_populates="teachers")
 
+
 class TeacherGroup(Base):
     __tablename__ = "teacher_groups"
 
@@ -23,6 +25,7 @@ class TeacherGroup(Base):
     # Связи
     teacher = relationship("Teacher", back_populates="groups")
     group = relationship("Group", back_populates="teachers")
+
 
 class StudentGroup(Base):
     __tablename__ = "student_groups"
@@ -35,6 +38,7 @@ class StudentGroup(Base):
     student = relationship("Student", back_populates="groups")
     group = relationship("Group", back_populates="students")
 
+
 class LessonSubscription(Base):
     __tablename__ = "lesson_subscriptions"
 
@@ -45,6 +49,7 @@ class LessonSubscription(Base):
     # Связи
     subscription = relationship("Subscription", back_populates="lessons")
     lesson = relationship("Lesson", back_populates="subscriptions")
+
 
 class SubscriptionLessonType(Base):
     __tablename__ = "subscription_lesson_types"

@@ -16,7 +16,7 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=schemas.ClassroomBaseInfo, status_code=status.HTTP_201_CREATED)
+@router.post("/", response_model=schemas.ClassroomInfo, status_code=status.HTTP_201_CREATED)
 def create_classroom(
         classroom_data: schemas.ClassroomBase,
         db: Session = Depends(get_db)
@@ -34,13 +34,13 @@ def create_classroom(
     return classroom
 
 
-@router.get("/", response_model=List[schemas.ClassroomBaseInfo])
+@router.get("/", response_model=List[schemas.ClassroomInfo])
 def get_all_classrooms(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     classrooms = db.query(models.Classroom).offset(skip).limit(limit).all()
     return classrooms
 
 
-@router.get("/{classroom_id}", response_model=schemas.ClassroomBaseInfo)
+@router.get("/{classroom_id}", response_model=schemas.ClassroomInfo)
 def get_classroom_by_id(classroom_id: uuid.UUID, db: Session = Depends(get_db)):
     classroom = db.query(models.Classroom).filter(models.Classroom.id == classroom_id).first()
     if classroom is None:

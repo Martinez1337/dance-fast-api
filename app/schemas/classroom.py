@@ -11,7 +11,7 @@ class ClassroomBase(BaseModel):
         from_attributes = True
 
 
-class ClassroomBaseInfo(ClassroomBase):
+class ClassroomInfo(ClassroomBase):
     id: uuid.UUID
     terminated: bool
 
