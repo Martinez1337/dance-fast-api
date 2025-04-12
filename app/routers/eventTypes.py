@@ -49,3 +49,24 @@ async def get_event_type_by_id(event_type_id: uuid.UUID, db: Session = Depends(g
             detail="Тип мероприятия не найден"
         )
     return event_type
+
+
+@router.patch("/{event_type_id}", response_model=schemas.EventTypeInfo, status_code=status.HTTP_200_OK)
+async def patch_event_type(
+        event_type_id: uuid.UUID,
+        event_type_data: schemas.EventTypeUpdate,
+        db: Session = Depends(get_db)
+):
+    event_type = db.query(models.EventType).filter(models.EventType.id == event_type_id).first()
+    if not event_type:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Тип мероприятия не найдено"
+        )
+
+    for field, value in event_type_data.model_dump(exclude_unset=True).items():
+        setattr(event_type, field, value)
+
+    db.commit()
+    db.refresh(event_type)
+    return event_type

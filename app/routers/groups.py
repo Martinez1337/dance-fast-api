@@ -16,7 +16,7 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=schemas.GroupBaseInfo, status_code=status.HTTP_201_CREATED)
+@router.post("/", response_model=schemas.GroupInfo, status_code=status.HTTP_201_CREATED)
 async def create_group(
         group_data: schemas.GroupBase,
         db: Session = Depends(get_db)
@@ -43,7 +43,7 @@ async def create_group(
     return group
 
 
-@router.get("/", response_model=List[schemas.GroupBaseInfo])
+@router.get("/", response_model=List[schemas.GroupInfo])
 async def get_all_groups(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     groups = db.query(models.Group).offset(skip).limit(limit).all()
     return groups
@@ -55,7 +55,7 @@ async def get_all_groups_full_info(skip: int = 0, limit: int = 100, db: Session 
     return groups
 
 
-@router.get("/{group_id}", response_model=schemas.GroupBaseInfo)
+@router.get("/{group_id}", response_model=schemas.GroupInfo)
 async def get_group_by_id(group_id: uuid.UUID, db: Session = Depends(get_db)):
     group = db.query(models.Group).filter(models.Group.id == group_id).first()
     if not group:
@@ -74,5 +74,34 @@ async def get_group_full_info_by_id(group_id: uuid.UUID, db: Session = Depends(g
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Группа не найдена"
         )
+
+    return group
+
+
+@router.patch("/{group_id}", response_model=schemas.GroupInfo, status_code=status.HTTP_200_OK)
+async def patch_group(
+        group_id: uuid.UUID, group_data: schemas.GroupUpdate,
+        db: Session = Depends(get_db)):
+    group = db.query(models.Group).filter(models.Group.id == group_id).first()
+
+    if not group:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Группа не найдена"
+        )
+
+    if group_data.level_id:
+        level = db.query(models.Level).filter(models.Level.id == group_data.level_id).first()
+        if not level:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Уровень не найден",
+            )
+
+    for field, value in group_data.model_dump(exclude_unset=True).items():
+        setattr(group, field, value)
+
+    db.commit()
+    db.refresh(group)
 
     return group

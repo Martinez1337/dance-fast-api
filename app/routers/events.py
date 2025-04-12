@@ -85,7 +85,7 @@ async def get_event_with_type_by_id(event_id: uuid.UUID, db: Session = Depends(g
     return event
 
 
-@router.patch("/{event_id}", response_model=schemas.ClassroomInfo, status_code=status.HTTP_200_OK)
+@router.patch("/{event_id}", response_model=schemas.EventInfo, status_code=status.HTTP_200_OK)
 async def patch_event(event_id: uuid.UUID, event_data: schemas.EventUpdate, db: Session = Depends(get_db)):
     event = db.query(models.Event).filter(models.Event.id == event_id).first()
     if not event:

@@ -89,3 +89,68 @@ async def get_lesson_full_info_by_id(lesson_id: uuid.UUID, db: Session = Depends
         )
 
     return lessons
+
+
+@router.patch("/{lesson_id}", response_model=schemas.LessonInfo, status_code=status.HTTP_200_OK)
+async def patch_lesson(
+        lesson_id: uuid.UUID, lesson_data: schemas.LessonUpdate,
+        db: Session = Depends(get_db)):
+    lesson = db.query(models.Lesson).filter(models.Lesson.id == lesson_id).first()
+
+    if not lesson:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Занятие не найдена"
+        )
+
+    if lesson_data.lesson_type_id:
+        lesson_type = db.query(models.LessonType).filter(models.LessonType.id == lesson_data.lesson_type_id).first()
+        if not lesson_type:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Тип занятия не найден",
+            )
+
+    if lesson_data.classroom_id:
+        classroom = db.query(models.Classroom).filter(models.Classroom.id == lesson_data.classroom_id).first()
+        if not classroom:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Зал не найден",
+            )
+
+    if lesson_data.group_id:
+        group = db.query(models.Group).filter(models.Group.id == lesson_data.group_id).first()
+        if not group:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Группа не найдена",
+            )
+
+    if lesson_data.group_id:
+        group = db.query(models.Group).filter(models.Group.id == lesson_data.group_id).first()
+        if not group:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Группа не найдена",
+            )
+
+    if lesson_data.start_time and lesson_data.start_time >= datetime.now(timezone.utc):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Указано невалидное время начала занятия"
+        )
+
+    if lesson_data.finish_time and datetime.now(timezone.utc) <= lesson_data.finish_time <= lesson_data.start_time:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Указано невалидное время конца занятия"
+        )
+
+    for field, value in lesson_data.model_dump(exclude_unset=True).items():
+        setattr(lesson, field, value)
+
+    db.commit()
+    db.refresh(lesson)
+
+    return lesson

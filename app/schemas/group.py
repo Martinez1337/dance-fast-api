@@ -17,7 +17,7 @@ class GroupBase(BaseModel):
         from_attributes = True
 
 
-class GroupBaseInfo(GroupBase): 
+class GroupInfo(GroupBase):
     id: uuid.UUID
     terminated: bool
 
@@ -25,7 +25,18 @@ class GroupBaseInfo(GroupBase):
         from_attributes = True
 
 
-class GroupFullInfo(GroupBaseInfo):
+class GroupUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str | None] = None
+    level_id: Optional[uuid.UUID] = None
+    max_capacity: Optional[int] = None
+    terminated: Optional[bool] = None
+
+    class Config:
+        from_attributes = True
+
+
+class GroupFullInfo(GroupInfo):
     level: LevelInfo
     students: List[GroupStudentBase]
     teachers: List[GroupTeacherBase]

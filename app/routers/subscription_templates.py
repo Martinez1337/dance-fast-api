@@ -61,7 +61,7 @@ async def get_subscription_template_by_id(subscription_template_id: uuid.UUID, d
 @router.patch("/{subscription_template_id}", response_model=schemas.SubscriptionTemplateInfo,
               status_code=status.HTTP_200_OK)
 async def patch_subscription_template(subscription_template_id: uuid.UUID,
-                                      subscription_template_data: schemas.SubscriptionUpdate,
+                                      subscription_template_data: schemas.SubscriptionTemplateUpdate,
                                       db: Session = Depends(get_db)):
     subscription_template = db.query(models.SubscriptionTemplate).filter(
         models.SubscriptionTemplate.id == subscription_template_id).first()

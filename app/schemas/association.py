@@ -18,13 +18,13 @@ class GroupTeacherBase(BaseModel):
 
 
 class MemberGroupBase(BaseModel):
-    group: "GroupBaseInfo"
+    group: "GroupInfo"
 
     class Config:
         from_attributes = True
 
 
-from app.schemas.group import GroupBaseInfo
+from app.schemas.group import GroupInfo
 from app.schemas.student import StudentGroupInfo
 from app.schemas.teacher import TeacherGroupInfo
 

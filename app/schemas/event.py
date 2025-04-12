@@ -27,7 +27,7 @@ class EventInfo(EventBase):
 
 class EventUpdate(BaseModel):
     event_type_id: Optional[uuid.UUID] = None
-    name: Optional[str]
+    name: Optional[str] = None
     description: Optional[str | None] = None
     start_time: Optional[datetime] = None
     photo_url: Optional[str] = None

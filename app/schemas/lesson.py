@@ -32,6 +32,22 @@ class LessonInfo(LessonBase):
         from_attributes = True
 
 
+class LessonUpdate(LessonBase):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    lesson_type_id: Optional[uuid.UUID] = None
+    start_time: Optional[datetime] = None
+    finish_time: Optional[datetime] = None
+    classroom_id: Optional[uuid.UUID] = None
+    group_id: Optional[uuid.UUID] = None
+    is_confirmed: Optional[bool] = None
+    are_neighbours_allowed: Optional[bool] = None
+    terminated: Optional[bool] = None
+
+    class Config:
+        from_attributes = True
+
+
 class LessonFullInfo(LessonInfo):
     lesson_type: LessonTypeInfo
     classroom: ClassroomInfo
