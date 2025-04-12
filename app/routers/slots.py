@@ -72,9 +72,24 @@ def get_all_slots_by_teacher_id(teacher_id: uuid.UUID, db: Session = Depends(get
 @router.get("/{slot_id}", response_model=schemas.SlotBaseInfo)
 def get_slot_by_id(slot_id: uuid.UUID, db: Session = Depends(get_db)):
     slot = db.query(models.Slot).filter(models.Slot.id == slot_id).first()
-    if slot is None:
+    if not slot:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Зал не найден"
+            detail="Слот не найден"
         )
     return slot
+
+
+@router.delete("/{slot_id}")
+def delete_slot_by_id(slot_id: uuid.UUID, db: Session = Depends(get_db)):
+    slot = db.query(models.Slot).filter(models.Slot.id == slot_id).first()
+    if not slot:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Слот не найден"
+        )
+
+    db.delete(slot)
+    db.commit()
+
+    return "Слот успешно удален"

@@ -73,3 +73,18 @@ async def get_admin_full_info_by_id(admin_id: uuid.UUID, db: Session = Depends(g
         )
 
     return admin
+
+
+@router.delete("/{admin_id}")
+def delete_admin_by_id(admin_id: uuid.UUID, db: Session = Depends(get_db)):
+    admin = db.query(models.Admin).filter(models.Admin.id == admin_id).first()
+    if not admin:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Администратор не найден"
+        )
+
+    db.delete(admin)
+    db.commit()
+
+    return "Администратор успешно удален"
