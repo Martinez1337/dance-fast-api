@@ -7,8 +7,6 @@ from datetime import datetime, timezone
 
 import uuid
 
-from app.schemas.eventType import EventTypeInfo
-
 router = APIRouter(
     prefix="/events",
     tags=["events"],
@@ -60,7 +58,7 @@ async def get_all_events(skip: int = 0, limit: int = 100, db: Session = Depends(
 @router.get("/{event_id}", response_model=schemas.EventInfo)
 async def get_event_by_id(event_id: uuid.UUID, db: Session = Depends(get_db)):
     db_event = db.query(models.Event).filter(models.Event.id == event_id).first()
-    if db_event is None:
+    if not db_event:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Мероприятие не найдено"
@@ -71,17 +69,48 @@ async def get_event_by_id(event_id: uuid.UUID, db: Session = Depends(get_db)):
 @router.get("/full-info/{event_id}", response_model=schemas.EventFullInfo)
 async def get_event_with_type_by_id(event_id: uuid.UUID, db: Session = Depends(get_db)):
     event = db.query(models.Event).filter(models.Event.id == event_id).first()
-    if event is None:
+    if not event:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Мероприятие не найдено"
         )
 
     event_type = db.query(models.EventType).filter(models.EventType.id == event.event_type_id).first()
-    if event is None:
+    if not event:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Тип мероприятия не найден"
         )
 
+    return event
+
+
+@router.patch("/{event_id}", response_model=schemas.ClassroomInfo, status_code=status.HTTP_200_OK)
+async def patch_event(event_id: uuid.UUID, event_data: schemas.EventUpdate, db: Session = Depends(get_db)):
+    event = db.query(models.Event).filter(models.Event.id == event_id).first()
+    if not event:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Мероприятие не найдено"
+        )
+
+    if event_data.event_type_id:
+        event_type = db.query(models.EventType).filter(models.EventType.id == event_data.event_type_id).first()
+        if not event_type:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Тип мероприятия не найдено"
+            )
+
+    if event_data.start_time and event_data.start_time >= datetime.now(timezone.utc):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Указано невалидное время мероприятия"
+        )
+
+    for field, value in event_data.model_dump(exclude_unset=True).items():
+        setattr(event, field, value)
+
+    db.commit()
+    db.refresh(event)
     return event
