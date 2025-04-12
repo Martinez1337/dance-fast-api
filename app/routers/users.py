@@ -29,7 +29,14 @@ async def create_user(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email уже используется",
         )
-    
+    # Проверяем, существует ли пользователь с таким phone_number
+    db_user = db.query(models.User).filter(models.User.phone_number == user_data.phone_number).first()
+    if db_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Номер телефона уже используется",
+        )
+
     # Создаем пользователя
     hashed_password = get_password_hash(user_data.password)
 
