@@ -19,6 +19,7 @@ class EventBase(BaseModel):
 
 class EventBaseInfo(EventBase):
     id: uuid.UUID
+    terminated: bool
 
     class Config:
         from_attributes = True
