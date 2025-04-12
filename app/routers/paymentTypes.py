@@ -48,3 +48,25 @@ async def get_payment_type_by_id(payment_type_id: uuid.UUID, db: Session = Depen
             detail="Тип платежа не найден"
         )
     return payment_type
+
+
+@router.patch("/{payment_type_id}", response_model=schemas.PaymentTypeInfo, status_code=status.HTTP_200_OK)
+async def patch_payment_type(
+        payment_type_id: uuid.UUID, payment_type_data: schemas.PaymentTypeUpdate,
+        db: Session = Depends(get_db)):
+
+    payment_type = db.query(models.PaymentType).filter(models.PaymentType.id == payment_type_id).first()
+
+    if not payment_type:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Тип платежа не найден"
+        )
+
+    for field, value in payment_type_data.model_dump(exclude_unset=True).items():
+        setattr(payment_type, field, value)
+
+    db.commit()
+    db.refresh(payment_type)
+
+    return payment_type

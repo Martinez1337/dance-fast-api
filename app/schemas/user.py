@@ -31,6 +31,18 @@ class UserInfo(BaseModel):
         from_attributes = True
 
 
+class UserUpdate(BaseModel):
+    email: Optional[EmailStr] = None
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    middle_name: Optional[str] = None
+    description: Optional[str] = None
+    phone_number: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
+
 class UserCreate(BaseModel):
     """Схема для создания пользователя."""
     email: EmailStr

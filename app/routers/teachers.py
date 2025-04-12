@@ -73,3 +73,29 @@ async def get_teacher_full_info_by_id(teacher_id: uuid.UUID, db: Session = Depen
         )
 
     return teacher
+
+
+@router.patch("/{teacher_id}", response_model=schemas.TeacherInfo, status_code=status.HTTP_200_OK)
+async def patch_teacher(teacher_id: uuid.UUID, teacher_data: schemas.TeacherUpdate, db: Session = Depends(get_db)):
+    teacher = db.query(models.Teacher).filter(models.Teacher.id == teacher_id).first()
+    if not teacher:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Преподаватель не найден"
+        )
+
+    if teacher_data.user_id:
+        user = db.query(models.User).filter(models.User.id == teacher_data.user_id).first()
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Пользователь не найден",
+            )
+
+    for field, value in teacher_data.model_dump(exclude_unset=True).items():
+        setattr(teacher, field, value)
+
+    db.commit()
+    db.refresh(teacher)
+
+    return teacher

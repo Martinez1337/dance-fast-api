@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 import uuid
 
@@ -12,6 +14,13 @@ class PaymentTypeBase(BaseModel):
 
 class PaymentTypeInfo(PaymentTypeBase):
     id: uuid.UUID
+
+    class Config:
+        from_attributes = True
+
+
+class PaymentTypeUpdate(BaseModel):
+    name: Optional[str] = None
 
     class Config:
         from_attributes = True

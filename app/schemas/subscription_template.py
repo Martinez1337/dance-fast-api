@@ -25,3 +25,15 @@ class SubscriptionTemplateInfo(SubscriptionTemplateBase):
     class Config:
         from_attributes = True
 
+
+class SubscriptionTemplateUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = None
+    lesson_count: Optional[int] = None
+    expiration_date: Optional[datetime] = None
+    expiration_day_count: Optional[int] = None
+    price: Optional[decimal.Decimal] = None
+    active: Optional[bool] = None
+
+    class Config:
+        from_attributes = True

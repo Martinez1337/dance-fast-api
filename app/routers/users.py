@@ -73,3 +73,37 @@ async def get_user_by_id(user_id: uuid.UUID, db: Session = Depends(get_db)):
             detail="Пользователь не найден"
         )
     return db_user
+
+
+@router.patch("/{user_id}", response_model=schemas.UserBase, status_code=status.HTTP_200_OK)
+async def patch_user(user_id: uuid.UUID, user_data: schemas.UserUpdate, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Пользователь не найден"
+        )
+
+    if user_data.email:
+        email = db.query(models.User).filter(models.User.email == user_data.email).first()
+        if email:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email уже используется",
+            )
+
+    if user_data.phone_number:
+        phone = db.query(models.User).filter(models.User.phone_number == user_data.phone_number).first()
+        if phone:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Номер телефона уже используется",
+            )
+
+    for field, value in user_data.model_dump(exclude_unset=True).items():
+        setattr(user, field, value)
+
+    db.commit()
+    db.refresh(user)
+
+    return user

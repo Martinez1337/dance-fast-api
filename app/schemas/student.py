@@ -2,7 +2,7 @@ import uuid
 from pydantic import BaseModel
 from app.schemas.user import UserBase, UserCreate
 from app.schemas.level import LevelInfo
-from typing import List
+from typing import List, Optional
 
 
 class StudentBase(BaseModel):
@@ -17,6 +17,15 @@ class StudentBase(BaseModel):
 class StudentInfo(StudentBase):
     id: uuid.UUID
     terminated: bool
+
+    class Config:
+        from_attributes = True
+
+
+class StudentUpdate(BaseModel):
+    user_id: Optional[uuid.UUID] = None
+    level_id: Optional[uuid.UUID] = None
+    terminated: Optional[bool] = None
 
     class Config:
         from_attributes = True

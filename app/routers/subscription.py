@@ -157,3 +157,42 @@ async def get_subscription_with_template_by_id(subscription_id: uuid.UUID, db: S
             active=subscription_template.active
         )
     )
+
+
+@router.patch("/{subscription_id}", response_model=schemas.SubscriptionInfo, status_code=status.HTTP_200_OK)
+async def patch_subscription(
+        subscription_id: uuid.UUID, subscription_data: schemas.SubscriptionUpdate,
+        db: Session = Depends(get_db)):
+    subscription = db.query(models.Subscription).filter(models.Subscription.id == subscription_id).first()
+
+    if not subscription:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Подписка не найдена"
+        )
+
+    if subscription_data.student_id:
+        student = db.query(models.Student).filter(models.Student.id == subscription_data.student_id).first()
+        if not student:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Студент не найден",
+            )
+
+    if subscription_data.subscription_template_id:
+        subscription_template = db.query(models.SubscriptionTemplate).filter(
+            models.SubscriptionTemplate.id == subscription_data.subscription_template_id).first()
+
+        if not subscription_template:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Шаблон подписки не найден",
+            )
+
+    for field, value in subscription_data.model_dump(exclude_unset=True).items():
+        setattr(subscription, field, value)
+
+    db.commit()
+    db.refresh(subscription)
+
+    return subscription

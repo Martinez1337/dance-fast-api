@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel
 from datetime import datetime
 from app.schemas.subscription_template import SubscriptionTemplateInfo
@@ -22,9 +24,18 @@ class SubscriptionInfo(SubscriptionBase):
         from_attributes = True
 
 
+class SubscriptionUpdate(BaseModel):
+    student_id: Optional[uuid.UUID] = None
+    subscription_template_id: Optional[uuid.UUID] = None
+    expiration_date: Optional[datetime] = None
+    payment_id: Optional[uuid.UUID] = None
+
+    class Config:
+        from_attributes = True
+
+
 class SubscriptionFullInfo(SubscriptionInfo):
     subscription_template: SubscriptionTemplateInfo
 
     class Config:
         from_attributes = True
-
