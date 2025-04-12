@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
-from app.database import engine, Base, init_db
+from app.database1 import engine, Base, init_db
 # Явно импортируем все модели
 from app.routers import users, auth, events, eventTypes, classrooms, subscription_templates, paymentTypes, payments, \
     subscription, slots, students, levels, teachers, lessonTypes, groups, admins, lessons
