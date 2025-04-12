@@ -13,7 +13,7 @@ load_dotenv()
 user = os.getenv("PGUSER")
 password = os.getenv("PGPASSWORD")
 host = os.getenv("PGHOST")
-port = os.getenv("PGUSER")
+port = os.getenv("PGPORT")
 database = os.getenv("PGUSER")
 
 # Принудительно устанавливаем правильный URL соединения
