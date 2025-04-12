@@ -19,8 +19,8 @@ router = APIRouter(
 
 @router.post("/", response_model=schemas.UserBase, status_code=status.HTTP_201_CREATED)
 async def create_user(
-    user_data: schemas.UserCreate,
-    db: Session = Depends(get_db)
+        user_data: schemas.UserCreate,
+        db: Session = Depends(get_db)
 ):
     # Проверяем, существует ли пользователь с таким email
     db_user = db.query(models.User).filter(models.User.email == user_data.email).first()
@@ -69,7 +69,7 @@ async def get_user_by_id(user_id: uuid.UUID, db: Session = Depends(get_db)):
     db_user = db.query(models.User).filter(models.User.id == user_id).first()
     if db_user is None:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, 
+            status_code=status.HTTP_404_NOT_FOUND,
             detail="Пользователь не найден"
         )
     return db_user

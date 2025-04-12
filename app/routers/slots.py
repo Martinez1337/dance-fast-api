@@ -17,7 +17,7 @@ router = APIRouter(
 
 
 @router.post("/", response_model=schemas.SlotBaseInfo, status_code=status.HTTP_201_CREATED)
-def create_slot(
+async def create_slot(
         slot_data: schemas.SlotBase,
         db: Session = Depends(get_db)
 ):
@@ -50,13 +50,13 @@ def create_slot(
 
 
 @router.get("/", response_model=List[schemas.SlotBaseInfo])
-def get_all_slots(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+async def get_all_slots(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     slots = db.query(models.Slot).offset(skip).limit(limit).all()
     return slots
 
 
 @router.get("/byTeacher/{teacher_id}", response_model=List[schemas.SlotBaseInfo])
-def get_all_slots_by_teacher_id(teacher_id: uuid.UUID, db: Session = Depends(get_db)):
+async def get_all_slots_by_teacher_id(teacher_id: uuid.UUID, db: Session = Depends(get_db)):
     teacher = db.query(models.Teacher).filter(models.Teacher.id == teacher_id).first()
     if not teacher:
         raise HTTPException(
@@ -70,7 +70,7 @@ def get_all_slots_by_teacher_id(teacher_id: uuid.UUID, db: Session = Depends(get
 
 
 @router.get("/{slot_id}", response_model=schemas.SlotBaseInfo)
-def get_slot_by_id(slot_id: uuid.UUID, db: Session = Depends(get_db)):
+async def get_slot_by_id(slot_id: uuid.UUID, db: Session = Depends(get_db)):
     slot = db.query(models.Slot).filter(models.Slot.id == slot_id).first()
     if not slot:
         raise HTTPException(
@@ -81,7 +81,7 @@ def get_slot_by_id(slot_id: uuid.UUID, db: Session = Depends(get_db)):
 
 
 @router.delete("/{slot_id}")
-def delete_slot_by_id(slot_id: uuid.UUID, db: Session = Depends(get_db)):
+async def delete_slot_by_id(slot_id: uuid.UUID, db: Session = Depends(get_db)):
     slot = db.query(models.Slot).filter(models.Slot.id == slot_id).first()
     if not slot:
         raise HTTPException(

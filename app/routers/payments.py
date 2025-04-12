@@ -21,7 +21,7 @@ router = APIRouter(
 
 
 @router.post("/", response_model=schemas.PaymentBaseInfo, status_code=status.HTTP_201_CREATED)
-def create_payment(
+async def create_payment(
         payment_data: schemas.PaymentBase,
         db: Session = Depends(get_db)
 ):
@@ -46,19 +46,19 @@ def create_payment(
 
 
 @router.get("/", response_model=List[schemas.PaymentBaseInfo])
-def get_all_payments(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+async def get_all_payments(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     payments = db.query(models.Payment).offset(skip).limit(limit).all()
     return payments
 
 
 @router.get("/withType", response_model=List[schemas.PaymentBaseInfoWithType])
-def get_all_payments_with_types(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+async def get_all_payments_with_types(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     payments = db.query(models.Payment).offset(skip).limit(limit).all()
     return payments
 
 
 @router.get("/{payment_id}", response_model=schemas.PaymentBaseInfo)
-def get_payment_by_id(payment_id: uuid.UUID, db: Session = Depends(get_db)):
+async def get_payment_by_id(payment_id: uuid.UUID, db: Session = Depends(get_db)):
     payment = db.query(models.Payment).filter(models.Payment.id == payment_id).first()
     if payment is None:
         raise HTTPException(
@@ -69,7 +69,7 @@ def get_payment_by_id(payment_id: uuid.UUID, db: Session = Depends(get_db)):
 
 
 @router.get("/withType/{payment_id}", response_model=schemas.PaymentBaseInfoWithType)
-def get_payment_with_type_by_id(payment_id: uuid.UUID, db: Session = Depends(get_db)):
+async def get_payment_with_type_by_id(payment_id: uuid.UUID, db: Session = Depends(get_db)):
     payment = db.query(models.Payment).filter(models.Payment.id == payment_id).first()
     if payment is None:
         raise HTTPException(

@@ -17,7 +17,7 @@ router = APIRouter(
 
 
 @router.post("/", response_model=schemas.EventTypeInfo, status_code=status.HTTP_201_CREATED)
-def create_event_type(
+async def create_event_type(
         event_type_data: schemas.EventTypeBase,
         db: Session = Depends(get_db)
 ):
@@ -35,13 +35,13 @@ def create_event_type(
 
 
 @router.get("/", response_model=List[schemas.EventTypeInfo])
-def get_all_event_types(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+async def get_all_event_types(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     event_types = db.query(models.EventType).offset(skip).limit(limit).all()
     return event_types
 
 
 @router.get("/{event_type_id}", response_model=schemas.EventTypeInfo)
-def get_event_type_by_id(event_type_id: uuid.UUID, db: Session = Depends(get_db)):
+async def get_event_type_by_id(event_type_id: uuid.UUID, db: Session = Depends(get_db)):
     event_type = db.query(models.EventType).filter(models.EventType.id == event_type_id).first()
     if event_type is None:
         raise HTTPException(

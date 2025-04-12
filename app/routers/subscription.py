@@ -15,12 +15,14 @@ router = APIRouter(
     responses={404: {"description": "Подписка не найдена"}}
 )
 
+
 @router.post("/", response_model=schemas.SubscriptionInfo, status_code=status.HTTP_201_CREATED)
-def create_subscription(
+async def create_subscription(
         subscription_data: schemas.SubscriptionBase,
         db: Session = Depends(get_db)
 ):
-    subscription_template = db.query(models.SubscriptionTemplate).filter(models.SubscriptionTemplate.id == subscription_data.subscription_template_id).first()
+    subscription_template = db.query(models.SubscriptionTemplate).filter(
+        models.SubscriptionTemplate.id == subscription_data.subscription_template_id).first()
     if not subscription_template:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -49,13 +51,13 @@ def create_subscription(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Платеж не найден"
         )
-    
+
     if subscription_data.expiration_date <= datetime.now(timezone.utc):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Дата окончания подписки просрочена"
         )
-    
+
     subscription = models.Subscription(
         student_id=student.id,
         subscription_template_id=subscription_template.id,
@@ -72,19 +74,20 @@ def create_subscription(
 
 
 @router.get("/", response_model=List[schemas.SubscriptionInfo])
-def get_all_subscriptions(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+async def get_all_subscriptions(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     subscriptions = db.query(models.Subscription).offset(skip).limit(limit).all()
     return subscriptions
 
 
 @router.get("/full-info", response_model=List[schemas.SubscriptionFullInfo])
-def get_all_subscriptions(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+async def get_all_subscriptions(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     subscriptions = db.query(models.Subscription).offset(skip).limit(limit).all()
 
     subscriptions_with_templates = []
 
     for subscription in subscriptions:
-        subscription_template = db.query(models.SubscriptionTemplate).filter(models.SubscriptionTemplate.id == subscription.subscription_template_id).first()
+        subscription_template = db.query(models.SubscriptionTemplate).filter(
+            models.SubscriptionTemplate.id == subscription.subscription_template_id).first()
 
         subscription_with_template = schemas.SubscriptionFullInfo(
             id=subscription.id,
@@ -110,7 +113,7 @@ def get_all_subscriptions(skip: int = 0, limit: int = 100, db: Session = Depends
 
 
 @router.get("/{subscription_id}", response_model=schemas.SubscriptionInfo)
-def get_subscription_by_id(subscription_id: uuid.UUID, db: Session = Depends(get_db)):
+async def get_subscription_by_id(subscription_id: uuid.UUID, db: Session = Depends(get_db)):
     db_subscription = db.query(models.Subscription).filter(models.Subscription.id == subscription_id).first()
     if db_subscription is None:
         raise HTTPException(
@@ -121,7 +124,7 @@ def get_subscription_by_id(subscription_id: uuid.UUID, db: Session = Depends(get
 
 
 @router.get("/full-info/{subscription_id}", response_model=schemas.SubscriptionFullInfo)
-def get_subscription_with_template_by_id(subscription_id: uuid.UUID, db: Session = Depends(get_db)):
+async def get_subscription_with_template_by_id(subscription_id: uuid.UUID, db: Session = Depends(get_db)):
     subscription = db.query(models.Subscription).filter(models.Subscription.id == subscription_id).first()
     if subscription is None:
         raise HTTPException(
@@ -129,7 +132,8 @@ def get_subscription_with_template_by_id(subscription_id: uuid.UUID, db: Session
             detail="Подписка не найдена"
         )
 
-    subscription_template = db.query(models.SubscriptionTemplate).filter(models.SubscriptionTemplate.id == subscription.subscription_template_id).first()
+    subscription_template = db.query(models.SubscriptionTemplate).filter(
+        models.SubscriptionTemplate.id == subscription.subscription_template_id).first()
     if subscription_template is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

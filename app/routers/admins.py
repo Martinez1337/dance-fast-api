@@ -76,7 +76,7 @@ async def get_admin_full_info_by_id(admin_id: uuid.UUID, db: Session = Depends(g
 
 
 @router.delete("/{admin_id}")
-def delete_admin_by_id(admin_id: uuid.UUID, db: Session = Depends(get_db)):
+async def delete_admin_by_id(admin_id: uuid.UUID, db: Session = Depends(get_db)):
     admin = db.query(models.Admin).filter(models.Admin.id == admin_id).first()
     if not admin:
         raise HTTPException(

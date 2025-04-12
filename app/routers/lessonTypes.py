@@ -17,7 +17,7 @@ router = APIRouter(
 
 
 @router.post("/", response_model=schemas.LessonTypeInfo, status_code=status.HTTP_201_CREATED)
-def create_lesson_type(
+async def create_lesson_type(
         lesson_type_data: schemas.LessonTypeBase,
         db: Session = Depends(get_db)
 ):
@@ -35,13 +35,13 @@ def create_lesson_type(
 
 
 @router.get("/", response_model=List[schemas.LessonTypeInfo])
-def get_all_lesson_types(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+async def get_all_lesson_types(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     lesson_types = db.query(models.LessonType).offset(skip).limit(limit).all()
     return lesson_types
 
 
 @router.get("/{lesson_type_id}", response_model=schemas.LessonTypeInfo)
-def get_lesson_type_by_id(lesson_type_id: uuid.UUID, db: Session = Depends(get_db)):
+async def get_lesson_type_by_id(lesson_type_id: uuid.UUID, db: Session = Depends(get_db)):
     lesson_type = db.query(models.LessonType).filter(models.LessonType.id == lesson_type_id).first()
     if not lesson_type:
         raise HTTPException(

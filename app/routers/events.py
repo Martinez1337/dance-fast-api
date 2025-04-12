@@ -18,7 +18,7 @@ router = APIRouter(
 
 
 @router.post("/", response_model=schemas.EventBaseInfo, status_code=status.HTTP_201_CREATED)
-def create_event(
+async def create_event(
         event_data: schemas.EventBase,
         db: Session = Depends(get_db)
 ):
@@ -46,19 +46,19 @@ def create_event(
 
 
 @router.get("/", response_model=List[schemas.EventBaseInfo])
-def get_all_events(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+async def get_all_events(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     events = db.query(models.Event).offset(skip).limit(limit).all()
     return events
 
 
 @router.get("/full-info", response_model=List[schemas.EventFullInfo])
-def get_all_events(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+async def get_all_events(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     events = db.query(models.Event).offset(skip).limit(limit).all()
     return events
 
 
 @router.get("/{event_id}", response_model=schemas.EventBaseInfo)
-def get_event_by_id(event_id: uuid.UUID, db: Session = Depends(get_db)):
+async def get_event_by_id(event_id: uuid.UUID, db: Session = Depends(get_db)):
     db_event = db.query(models.Event).filter(models.Event.id == event_id).first()
     if db_event is None:
         raise HTTPException(
@@ -69,7 +69,7 @@ def get_event_by_id(event_id: uuid.UUID, db: Session = Depends(get_db)):
 
 
 @router.get("/full-info/{event_id}", response_model=schemas.EventFullInfo)
-def get_event_with_type_by_id(event_id: uuid.UUID, db: Session = Depends(get_db)):
+async def get_event_with_type_by_id(event_id: uuid.UUID, db: Session = Depends(get_db)):
     event = db.query(models.Event).filter(models.Event.id == event_id).first()
     if event is None:
         raise HTTPException(

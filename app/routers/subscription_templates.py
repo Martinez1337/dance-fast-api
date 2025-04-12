@@ -18,8 +18,8 @@ router = APIRouter(
 
 @router.post("/", response_model=schemas.SubscriptionTemplateInfo, status_code=status.HTTP_201_CREATED)
 async def create_subscription_template(
-    subscription_template_data: schemas.SubscriptionTemplateBase,
-    db: Session = Depends(get_db)
+        subscription_template_data: schemas.SubscriptionTemplateBase,
+        db: Session = Depends(get_db)
 ):
     # Создаем шаблон подписки
     subscription_template = models.SubscriptionTemplate(
@@ -39,17 +39,20 @@ async def create_subscription_template(
 
     return subscription_template
 
+
 @router.get("/", response_model=List[schemas.SubscriptionTemplateInfo])
 async def get_all_subscription_templates(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     subscription_templates = db.query(models.SubscriptionTemplate).offset(skip).limit(limit).all()
     return subscription_templates
 
+
 @router.get("/{subscription_template_id}", response_model=schemas.SubscriptionTemplateInfo)
 async def get_subscription_template_by_id(subscription_template_id: uuid.UUID, db: Session = Depends(get_db)):
-    db_subscription_template = db.query(models.SubscriptionTemplate).filter(models.SubscriptionTemplate.id == subscription_template_id).first()
+    db_subscription_template = db.query(models.SubscriptionTemplate).filter(
+        models.SubscriptionTemplate.id == subscription_template_id).first()
     if db_subscription_template is None:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, 
+            status_code=status.HTTP_404_NOT_FOUND,
             detail="Шаблон подписки не найден"
         )
-    return db_subscription_template 
+    return db_subscription_template

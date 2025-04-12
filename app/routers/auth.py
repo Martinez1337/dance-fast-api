@@ -20,6 +20,7 @@ router = APIRouter(
     tags=["authentication"],
 )
 
+
 @router.post("/register", response_model=StudentResponse, status_code=status.HTTP_201_CREATED)
 async def register(user_data: StudentCreate, db: Session = Depends(get_db)):
     """Регистрация нового студента."""
@@ -46,7 +47,7 @@ async def register(user_data: StudentCreate, db: Session = Depends(get_db)):
     )
     new_user.role = "student"
     new_user.level_name = db.query(Level).filter(Level.id == user_data.level_id).first().name
-    
+
     # Сохраняем пользователя в базе данных
     db.add(new_user)
     db.commit()
@@ -56,7 +57,7 @@ async def register(user_data: StudentCreate, db: Session = Depends(get_db)):
         user_id=new_user.id,
         level_id=user_data.level_id,
         created_at=new_user.created_at
-    )   
+    )
 
     db.add(student)
     db.commit()
@@ -65,12 +66,13 @@ async def register(user_data: StudentCreate, db: Session = Depends(get_db)):
 
     return new_user
 
+
 @router.post("/token", response_model=Token)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     """Получение токена доступа."""
     # Ищем пользователя по email
     user = db.query(User).filter(User.email == form_data.username).first()
-    
+
     # Проверяем учетные данные пользователя
     if not user or not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
@@ -78,15 +80,16 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
             detail="Неверный email или пароль",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    
+
     # Создаем данные для токена
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": str(user.id)},
         expires_delta=access_token_expires
     )
-    
+
     return {"access_token": access_token, "token_type": "bearer"}
+
 
 @router.get("/me")
 async def read_users_me(current_user: User = Depends(get_current_active_user), db: Session = Depends(get_db)):
@@ -105,7 +108,7 @@ async def read_users_me(current_user: User = Depends(get_current_active_user), d
             role="student",
             level_name=level
         )
-    
+
     teacher = db.query(Teacher).filter(Teacher.user_id == current_user.id).first()
     if teacher:
         return UserInfo(
@@ -118,7 +121,7 @@ async def read_users_me(current_user: User = Depends(get_current_active_user), d
             phone_number=current_user.phone_number,
             role="teacher"
         )
-    
+
     admin = db.query(Admin).filter(Admin.user_id == current_user.id).first()
     if admin:
         return UserInfo(
@@ -131,8 +134,8 @@ async def read_users_me(current_user: User = Depends(get_current_active_user), d
             phone_number=current_user.phone_number,
             role="admin"
         )
-    
+
     raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Пользователя с введенными учетными данными не существует"
-        )
+        status_code=status.HTTP_404_NOT_FOUND,
+        detail="Пользователя с введенными учетными данными не существует"
+    )
